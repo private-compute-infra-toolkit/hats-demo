@@ -1,0 +1,9 @@
+[submodule "components/bidding-auction-server"]
+	path = components/bidding-auction-server
+	url = sso://team/android-privacy-sandbox-remarketing/fledge/servers/bidding-auction-server
+[submodule "components/hats"]
+	path = components/hats
+  url = sso://privacysandbox/hats
+[submodule "components/builders"]
+	path = components/builders
+	url = https://github.com/privacysandbox/build-system

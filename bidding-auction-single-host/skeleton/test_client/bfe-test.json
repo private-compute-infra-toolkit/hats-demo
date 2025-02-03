@@ -1,0 +1,16 @@
+{
+  "buyer_input": {
+    "interest_groups": {
+      "name": "dsp-x-demo",
+      "ad_render_ids": ["1234"],
+      "bidding_signals_keys": ["demo-key"],
+      "browser_signals": { "bid_count": "1", "join_count": "1", "prev_wins": "[]" }
+    }
+  },
+  "auction_signals": "{\"testKey\":\"someValue\"}",
+  "buyer_signals": "{\"testKey\":\"someValue\"}",
+  "seller": "https://localhost:6002",
+  "publisher_name": "http://localhost:4001",
+  "enable_debug_reporting": true,
+  "client_type": "CLIENT_TYPE_BROWSER"
+}

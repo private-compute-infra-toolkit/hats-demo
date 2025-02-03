@@ -1,0 +1,15 @@
+name: "HATs Demo"
+description:
+  "Demo for running applications using Hats stack."
+third_party {
+  url {
+    type: HOMEPAGE
+    value: "https://github.com/privacysandbox"
+  }
+  url {
+    type: GIT
+    value: "https://github.com/privacysandbox"
+  }
+  version: "0.0.1"
+  license_type: NOTICE
+}
