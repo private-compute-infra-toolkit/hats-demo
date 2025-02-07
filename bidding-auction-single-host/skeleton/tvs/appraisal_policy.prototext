@@ -41,7 +41,7 @@ policies {
     acpi_table_sha256: "10ec82d58dc2471c09f328650dd9d7bd2df0fc5f96ce64cacefadea88dde3aba"
     kernel_cmd_line_regex: "^ console=ttyS0 panic=-1 brd.rd_nr=1 brd.rd_size=.* brd.max_part=1 ip=192.168.84.*::192.168.84.1:255.255.255.0::enp0s1:off quiet -- --launcher-addr=vsock://2:.*$"
     system_image_sha256: "371e6c98316b094378e87a06704e7fd08ad68eeef627e05e50d3345b90065a91"
-    container_binary_sha256: "07522ba9dd0bb26e723a3732073a770dc9db4dfe4fd27ef1aa6b76a19f8f2e10"
+    container_binary_sha256: "3dc31948dfaef636559ad6c8bf3561ccc0e57db766b0fc1221c7460073fa0421"
   }
 }
 policies {

@@ -94,6 +94,21 @@ If you experience build errors when running the `sfe-test.sh` script, it's cruci
 
 By addressing these issues, you should be able to successfully launch and test the B&A services using the Hats demo.
 
+### Invalid OpenSSL error
+
+Symptom:
+In the case that clicking on "Run single-seller B&A auction" results in an empty Publisher Site iframe in a while.
+In bidding-auction-testing-app, check the log and it shows:
+
+```
+  code: 3,
+  details: 'Error while decrypting protected_auction_ciphertext: Malformed OHTTP encapsulated request provided Failed to decrypt.OpenSSL error: e
+rror:1e000065:Cipher functions:OPENSSL_internal:BAD_DECRYPT.',
+```
+
+This is caused by Chrome not picking up the latest HPKE public key from the local public key server.
+Chrome caches the HPKE encryption key for 1 day for each user profile. You need to restart Chrome and enter "Guest Profile" again.
+
 ## Build Script
 
 

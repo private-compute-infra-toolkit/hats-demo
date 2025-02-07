@@ -16,4 +16,4 @@
 SCRIPT_DIR="$(dirname $(readlink -f $0))"
 docker build --network host -t public-key-server "$SCRIPT_DIR"
 docker rm -f public-key-server-container
-docker run -it --rm --ip 192.168.84.200 --network ba-dev --name public-key-server-container -p 9999:9999 -v "$SCRIPT_DIR"/public_hold_public_hpke_key_hex:/public_hold_public_hpke_key_hex public-key-server
+docker run -it --init --rm --ip 192.168.84.200 --network ba-dev --name public-key-server-container -p 9999:9999 -v "$SCRIPT_DIR"/public_hold_public_hpke_key_hex:/public_hold_public_hpke_key_hex public-key-server
