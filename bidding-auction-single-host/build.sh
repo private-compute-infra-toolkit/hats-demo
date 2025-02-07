@@ -67,7 +67,7 @@ build_hats_stack () {
   mv -f "$PREBUILT_DIR/stage1.cpio" "$TAR_DIR/initrd.cpio.xz"
   mv -f "$PREBUILT_DIR/bzImage" "$TAR_DIR/kernel_bin"
   mv -f "$PREBUILT_DIR/hats_system_image.tar.xz" "$TAR_DIR/system.tar.xz"
-  tar -C "$TAR_DIR" -cf "$PREBUILT_DIR/system_bundle.tar" .
+  tar --sort=name --owner=root:0 --group=root:0 --mtime='UTC 1980-02-01' -C "$TAR_DIR" -cf "$PREBUILT_DIR/system_bundle.tar" .
 
   mv -f "$PREBUILT_DIR/system_bundle.tar" "$DEMO_DIR/ba_hats_stack/"
   mv -f "$PREBUILT_DIR/launcher_main" "$DEMO_DIR/ba_hats_stack/"

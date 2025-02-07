@@ -93,3 +93,33 @@ If you experience build errors when running the `sfe-test.sh` script, it's cruci
 2.  **Enable IP Tables:** If `iptables` is not set to `true`, enable it and restart the Docker service.
 
 By addressing these issues, you should be able to successfully launch and test the B&A services using the Hats demo.
+
+## Build Script
+
+
+If you see get-builder-image-tagged error:
+
+```
+Error: get-builder-image-tagged status code: 1
+Docker build log: /usr/local/google/home/sidachen/hats-demo/docker-buildx-build-debian-ulGb.log
+
+build_and_test_all_in_docker runtime: 3s
+Error: build_and_test_in_docker completed with status code: 1
+```
+
+And the build log says:
+
+```
+------
+ERROR: failed to solve: rpc error: code = Unknown desc = failed to solve with frontend dockerfile.v0: failed to create LLB definition: failed to do request: Head "https://mirror.gcr.io/v2/docker/buildx-bin/manifests/v0.10?ns=docker.io": proxyconnect tcp: dial tcp 127.0.0.1:8080: connect: connection refused
+```
+
+**Troubleshooting Steps:**
+
+1.  **Review Docker Proxy Configuration:**
+    *   Examine the Docker daemon configuration files:
+        *   `/etc/systemd/system/docker.service.d/override.conf`
+        *   `/etc/docker/daemon.json`
+    *   Verify that the proxy settings are correctly configured and that the specified proxy server is active and reachable.
+2.  **Check Proxy Server Status:**
+    *   Ensure that the proxy server (likely running on `127.0.0.1:8080`) is running without errors.
