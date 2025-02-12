@@ -21,6 +21,7 @@ DEMO_DIR="$(dirname $BUILD_LOC)/demo"
 SKELETON_DIR="$(dirname $BUILD_LOC)/skeleton"
 
 prepare_demo() {
+  rm -rf $DEMO_DIR
   mkdir -p $DEMO_DIR
   cp -r $SKELETON_DIR/. $DEMO_DIR
 
@@ -108,7 +109,7 @@ build_ba_demo_stack () {
 package() {
   pushd $(dirname $BUILD_LOC)
   tar --sort=name --owner=root:0 --group=root:0 --mtime='UTC 1980-02-01' -cf demo.tar demo
-  sha256sum demo.tar
+  echo "$(cat demo.tar.sha256) demo.tar" | sha256sum --check
   popd
 }
 
