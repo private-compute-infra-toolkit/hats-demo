@@ -1,0 +1,23 @@
+policies {
+  description: "QEMU CVM - TRUSTED APP Cores: 1, RAM: 8000000 KB"
+  measurement {
+    stage0_measurement {
+      amd_sev {
+        sha384: "6ecaca8fac956f016772ee890356a30df7ea35882d2d0372a9f9de7e78a46a8f9aba3832bb94e20dccfe4a4f45b1dc20"
+        min_tcb_version {
+          boot_loader: 4
+          snp: 22
+          microcode: 213
+        }
+      }
+    }
+    kernel_image_sha256: "eca5ef41f6dc7e930d8e9376e78d19802c49f5a24a14c0be18c8e0e3a8be3e84"
+    kernel_setup_data_sha256: "9745b0f42d03054bb49033b766177e571f51f511c1368611d2ee268a704c641b"
+    init_ram_fs_sha256: "7cd4896bdd958f67a6a85cc1cc780761ac9615bc25ae4436aad1d4e9d2332c1a"
+    memory_map_sha256: "c9a26ba0a492465327894303dc6b1bd23a41cc1093fe96daa05fa7de0d25e392"
+    acpi_table_sha256: "453d27f58b75156f3f9fdbd4d4cf1eaec4fb5a3968fb6aca198ebb56ad9f20fc"
+    kernel_cmd_line_regex: "console=ttyS0 panic=-1 brd.rd_nr=1 brd.rd_size=10485760 brd.max_part=1 ip=192.168.111.12::192.168.111.11:255.255.255.0::enp0s1:off quiet -- --launcher-addr=vsock://2:.*$"
+    system_image_sha256: "371e6c98316b094378e87a06704e7fd08ad68eeef627e05e50d3345b90065a91"
+    container_binary_sha256: "ddf3a5b751438bd75a4cbe2f679ce02ea2b17290eec380fffcbf310e87fa2c8f"
+  }
+}
