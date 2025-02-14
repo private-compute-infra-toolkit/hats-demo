@@ -12,13 +12,23 @@ This document outlines the steps to set up and run a demonstration of the Biddin
 
 ## Demo Setup
 
+### Prepare the Build Machine Dependencies
+On your build machine, you need to setup docker version>=20.10.21 [instruction](https://docs.docker.com/engine/install/), Nix following [oak nix setup instructions](https://github.com/project-oak/oak/blob/main/docs/development.md#install-nix), and bazel (B&A requires 6.3.0, Hats requires 7.4.1) through [bazelisk latest](https://github.com/bazelbuild/bazelisk?tab=readme-ov-file#installation).
+
+In the case that sudo is required to run docker, please follow [docker sudoless
+instruction](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user).
+
 ### Build the Demo Folder
 
-On your build machine, execute the following script to generate the `demo` folder, which contains all required setup scripts, Hats stack, and B&A stack components.
+NOTE: The build process can take up to 2 hours to finish on a 16 core VM.
+
+Execute the following script to generate the `demo` folder, which contains all required setup scripts, Hats stack, and B&A stack components.
 
 ```bash
 ./build.sh
 ```
+
+If you see the line `demo.tar: OK`, it's finished successfully.
 
 **build.sh Details:**
 
@@ -45,13 +55,16 @@ This script performs the following actions:
     - Creates a tar archive of the `demo` directory.
     - Generates a SHA256 checksum of the archive.
 
-### Prepare the Test Machine
+### Prepare the Test Machine Dependendencies
 
 Transfer the generated `demo` folder from the build machine to the test machine (the SEV-SNP device). You can use `scp` to do copying.
 
 ### Setup the Environment on the Test Machine
 
-On the test machine, navigate to the `demo` folder and run the setup script.
+NOTE: This setup step takes around 10 minutes on a 32 core CPU if trying to compile QEMU.
+
+On the test machine, navigate to the `demo` folder and run the setup script,
+which setup the test machine dependencies.
 
 ```bash
 cd demo
