@@ -52,7 +52,7 @@ sudo "$LAUNCHER_SCRIPT" \
   --use_tls=false \
   --launcher_config_path=$1 \
   --tvs_authentication_key="$(cat ./launcher_hold_user_authentication_private_key_hex)" \
-  --qemu_log_to_std \
+  --vmm_log_to_std \
   --minloglevel=0 \
   --stderrthreshold=0
 }
