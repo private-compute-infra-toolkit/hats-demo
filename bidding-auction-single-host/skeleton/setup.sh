@@ -56,7 +56,7 @@ setup_qemu() {
   fi
 
   # QEMU
-  sudo yum install git glib2-devel libfdt-devel pixman-devel zlib-devel bzip2 python3
+  sudo yum install -y gcc git glib2-devel libfdt-devel pixman-devel zlib-devel bzip2 python3
   pip install ninja
   wget https://download.qemu.org/qemu-9.2.0-rc3.tar.xz
   tar xvJf qemu-9.2.0-rc3.tar.xz
@@ -88,7 +88,7 @@ setup_test_client() {
   git clone https://github.com/privacysandbox/bidding-auction-servers
   git clone https://github.com/privacysandbox/bidding-auction-local-testing-app.git
   pushd bidding-auction-local-testing-app
-  ./setup
+  sudo ./setup
   popd
   cat << EOF
 Please add bidding-auction-local-testing-app/certs/localhost.pem file as a trusted SSL certificate in your system. On Mac, this requires going to KeyChain.

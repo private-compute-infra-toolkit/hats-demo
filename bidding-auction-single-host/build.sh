@@ -29,7 +29,7 @@ prepare_demo() {
   git submodule update --init --recursive
   pushd $REPO_ROOT/components/hats/
   # Pin to specific hash to prevent demo going out of shape.
-  git checkout 8abb7e99106e4cc1af1cc5433657fd98e617bf8f
+  git checkout 50f063865113f1ccaa835ad4eb306542632586a5
   popd
   pushd $REPO_ROOT/components/bidding-auction-server/
   # Pin to the pending CL for now. This is blocked by ACL changes.

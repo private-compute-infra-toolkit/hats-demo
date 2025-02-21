@@ -3,3 +3,4 @@ bidding-auction-single-host/demo.tar
 trusted-application-single-host/demo
 trusted-application-single-host/demo.tar
 dist/
+docker-buildx-presubmit-*.log
