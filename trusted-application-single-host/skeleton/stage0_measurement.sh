@@ -21,7 +21,7 @@ setup_tvs_appraisal_policy() {
   pushd $SETUP_DIR
   git clone https://github.com/virtee/sev-snp-measure $SETUP_DIR/sev-snp-measure
   mkdir -p /tmp/system_bundle
-  tar -xf $DEMO_DIR/ba_hats_stack/system_bundle.tar -C /tmp/system_bundle
+  tar -xf $DEMO_DIR/ta_hats_stack/system_bundle.tar -C /tmp/system_bundle
   local STAGE0_MEASUREMENT=$(./sev-snp-measure/sev-snp-measure.py --ovmf=/tmp/system_bundle/stage0_bin \
             --mode=snp \
             --vcpu-family=`cat /proc/cpuinfo | grep "cpu family" | uniq | cut -d ':' -f 2 | cut -d " " -f 2` \

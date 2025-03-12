@@ -58,8 +58,8 @@ kill_scripts() {
 trap kill_scripts SIGINT SIGTERM
 
 # Run each script in the background and redirect stdout/stderr to log files
-LOG_FILE="trusted application.log"
-ERROR_FILE="trusted application_error.log"
+LOG_FILE="trusted_application.log"
+ERROR_FILE="trusted_application_error.log"
 echo "Running trusted application stdout=$LOG_FILE, stderr=$ERROR_FILE"
 launch_trusted_application > "$LOG_FILE" 2> "$ERROR_FILE" &
 PIDS+=($!)
