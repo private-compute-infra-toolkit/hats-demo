@@ -32,13 +32,13 @@ configuration. To resolve this, follow these steps:
 
 2.  **Update `tvs/appraisal_policy.prototext`:**
 
-        - **Kernel Image Digest:** Update the `kernel_image_sha256` field in
-          `tvs/appraisal_policy.prototext` with the value from `Kernel image
-
-    digest:`line.     - **Kernel Setup Data Digest:** Update the`kernel*setup_data_sha256`      field in`tvs/appraisal_policy.prototext`with the value from the      `Kernel
-    setup data
-    digest:`line.     - **Kernel Command-Line:** Update the`kernel_cmd_line_regex`field in      `tvs/appraisal_policy.prototext`with the kernel command line. The       command line is the part after`-append`in the QEMU command that the       launcher prints out. For example:`I0204
-    10:39:35.250854 2316808 launcher.cc:557] Server listening on 'vsock:2:1879495139' I0204
+    - **Kernel Image Digest:** Update the `kernel_image_sha256` field in
+          `tvs/appraisal_policy.prototext` with the value from `Kernel image digest:`line.
+    - **Kernel Setup Data Digest:** Update the`kernel*setup_data_sha256`      field in`tvs/appraisal_policy.prototext`with the value from the      `Kernel
+    setup data digest:`line.     
+    - **Kernel Command-Line:** Update the`kernel_cmd_line_regex`field in      `tvs/appraisal_policy.prototext`with the kernel command line. The command line is the part    after`-append`in the QEMU command that the       launcher prints out. For example:
+    ```
+    10:39:35.250854 2316808 launcher.cc:557] Server listening on 'vsock:2:1879495139'
     10:39:35.250975 2316808 launcher.cc:417] Qemu command:/usr/local/bin/qemu-system-x86_64
     /usr/local/bin/qemu-system-x86_64 -enable-kvm -cpu host -m 4194304k -smp 2 -nodefaults
     -nographic -no-reboot -machin e q35,acpi=on,memory-backend=ram1,confidential-guest-support=sev0
@@ -51,24 +51,33 @@ configuration. To resolve this, follow these steps:
     panic=-1 brd.rd_nr=1 brd.rd_si ze=4194304 brd.max_part=1
     ip=192.168.84.101::192.168.84.1:255.255.255.0::enp0s1:off quiet --
     --launcher-addr=vsock://2:1879495139 -serial
-    stdio`Pick the part after      `-append`and turn that into a regex for the field.     - **Initial RAM Disk Digest:** Update the`init_ram_fs_sha256`field in      `tvs/appraisal_policy.prototext`with the value from the`Initial
+    stdio
+    ```
+    - Pick the part after      `-append`and turn the launcher vsock port into a regex for the field. This field is changed when the ramdrive_size_kb, ram_size_kb, or the networking configuration are changed.
+    - **Initial RAM Disk Digest:** Update the`init_ram_fs_sha256`field in      `tvs/appraisal_policy.prototext`with the value from the`Initial
     RAM disk
-    digest:`line.     - **ACPI Table Generation Digest:** Update the`acpi_table_sha256`field       in`tvs/appraisal_policy.prototext`with the value from the`ACPI
+    digest:`line.
+    - **ACPI Table Generation Digest:** Update the`acpi_table_sha256`field       in`tvs/appraisal_policy.prototext`with the value from the`ACPI
     table generation
-    digest:`line. When you change the`num_cpus`,       `ramdrive_size_kb`, `ram_size_kb`, etc, this value will change.     - **E820 Table Digest:** Update the `memory_map_sha256`field in      `tvs/appraisal_policy.prototext`with the value from the`E820
+    digest:`line. When you change the`num_cpus`,       `ramdrive_size_kb`, `ram_size_kb`, etc, this value will change.
+    - **E820 Table Digest:** Update the `memory_map_sha256`field in      `tvs/appraisal_policy.prototext`with the value from the`E820
     table
-    digest:`line. When you change the`num_cpus`, `ramdrive_size_kb`,       `ram_size_kb`, etc, this value will change.     - **Container Binary SHA256:** Update the `container_binary_sha256`field       in`tvs/appraisal_policy.prototext`. This field is changed by runc       runtime bundle in `./ba_hats_stack/stack*\*/**/runc_runtime_bundle.tar`.       The content and sha256sum of the tar file will be changed when B&A code       or config is changed. You can get this value from running `sha256sum
-    runc_runtime_bundle.tar`. - **System Image SHA256:** Update the `system_image_sha256` field in
+    digest:`line. When you change the`num_cpus`, `ramdrive_size_kb`,       `ram_size_kb`, etc, this value will change.
+    - **Container Binary SHA256:** Update the `container_binary_sha256`field       in`tvs/appraisal_policy.prototext`. This field is changed by runc       runtime bundle in `./ba_hats_stack/stack*\*/**/runc_runtime_bundle.tar`.       The content and sha256sum of the tar file will be changed when B&A code       or config is changed. You can get this value from running `sha256sum
+    runc_runtime_bundle.tar`.
+    - **System Image SHA256:** Update the `system_image_sha256` field in
     `tvs/appraisal_policy.prototext`. This field is changed by
     `./ba_hats_stack/system_bundle.tar/system.tar.xz`. It'll be changed when the linux system image
     running inside the CVM is changed such as code changes in oak orchestrator or systemctl config
     etc. You can get this value from running
-    `mkdir /tmp/system_bundle && tar -xf ./ba_hats_stack/system_bundle.tar -C /tmp/system_bundle && sha256sum /tmp/system_bundle/system.tar.xz`. -
-    **Stage0 Measurement:\*\* Update the `stage0_measurement` field in
+    `mkdir /tmp/system_bundle && tar -xf ./ba_hats_stack/system_bundle.tar -C /tmp/system_bundle && sha256sum /tmp/system_bundle/system.tar.xz`.
+    - **Stage0 Measurement:** Update the `stage0_measurement` field in
     `tvs/appraisal_policy.prototext`. This field is changed by running on different machines with
     different CPU or BIOS config. You can get this value from running `./stage0_measurement.sh` in
     the demo folder and paste the result in the appraisal_policy file. Example output:
-    ``~/tar/demo/_setup ~/tar/demo fatal: destination path '/home/sidachen/tar/demo/_setup/sev-snp-measure' already exists and is not an empty directory. Cargo is already installed fatal: destination path 'snphost' already exists and is not an empty directory. ~/tar/demo/_setup/snphost ~/tar/demo/_setup ~/tar/demo Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s ~/tar/demo/_setup ~/tar/demo ~/tar/demo Please replace the corresponding fields in ./tvs/appraisal_policy.prototext stage0_measurement { amd_sev { sha384: "fe21dd7648c63f0529f05b375c2cd1d00c049cd3fbd752de9ea24f0701e56db7b8a062ebd41fa16a1385213c40af76f8" min_tcb_version { boot_loader: 4 snp: 21 microcode: 213 } } }``
+    ```
+    ~/tar/demo/_setup ~/tar/demo fatal: destination path '/home/sidachen/tar/demo/_setup/sev-snp-measure' already exists and is not an empty directory. Cargo is already installed fatal: destination path 'snphost' already exists and is not an empty directory. ~/tar/demo/_setup/snphost ~/tar/demo/_setup ~/tar/demo Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s ~/tar/demo/_setup ~/tar/demo ~/tar/demo Please replace the corresponding fields in ./tvs/appraisal_policy.prototext stage0_measurement { amd_sev { sha384: "fe21dd7648c63f0529f05b375c2cd1d00c049cd3fbd752de9ea24f0701e56db7b8a062ebd41fa16a1385213c40af76f8" min_tcb_version { boot_loader: 4 snp: 21 microcode: 213 } } }
+    ```
 
 3.  **Restart TVS:** After modifying the `appraisal_policy.prototext`, restart the TVS service for
     the changes to take effect: `bash ./launch-tvs.sh`
@@ -88,9 +97,9 @@ This error indicates that there is insufficient space on the virtual disk. To re
 
 1.  **Modify `ramdrive_size_kb`:** Increase the value of the `ramdrive_size_kb` parameter in
     launcher configuration file (e.g., `./ba_hats_stack/stack*_/_.prototext`).
-2.  **Modify E820 Table Digest and ACPI Table Generation Digest in Appraisal Policy:** Restart the
+2.  **Update Appraisal Policy:** Restart the
     B&A service with launcher configuration changed and follow `Appraisal Policy Mismatch` section
-    to update the appraisal policy.
+    to update the appraisal policy. When modifying the ramdrive size we have to update e820 table digest, acpi table digest, and kernel commandline in the appraisal policy.
 3.  **Restart Services:** Restart the TVS, and B&A services with the updated configuration. Note:
     Ensure that the total RAM allocated to the server does not exceed the available memory on your
     system to avoid out-of-memory (OOM) errors.
