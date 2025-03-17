@@ -1,0 +1,44 @@
+{
+  "auction_config": {
+    "seller": "https://localhost:6002",
+    "auction_signals": "{\"testKey\":\"someValue\"}",
+    "seller_signals": "{\"testKey\":\"someValue\"}",
+    "buyer_list": [
+      "https://localhost:5003",
+      "https://localhost:5004"
+    ],
+    "per_buyer_config": {
+      "https://localhost:5003": { "buyer_signals": "{\"testKey\":\"someValue\"}" },
+      "https://localhost:5004": { "buyer_signals": "{\"testKey\":\"someValue\"}" }
+    }
+  },
+  "raw_protected_audience_input": {
+    "publisher_name": "http://localhost:4001",
+    "generation_id": "1210718540",
+    "enable_debug_reporting": true,
+    "raw_buyer_input": {
+      "https://localhost:5003": {
+        "interest_groups": [
+          {
+            "name": "dsp-x-demo",
+            "ad_render_ids": ["1234"],
+            "bidding_signals_keys": ["demo-key"],
+            "browser_signals": { "bid_count": "1", "join_count": "1", "prev_wins": "[]" },
+            "user_bidding_signals": "[1, 2, 3]"
+          }
+        ]
+      },
+      "https://localhost:5004": {
+        "interest_groups": [
+          {
+            "name": "dsp-x-demo",
+            "ad_render_ids": ["1234"],
+            "bidding_signals_keys": ["demo-key"],
+            "browser_signals": { "bid_count": "1", "join_count": "1", "prev_wins": "[]" },
+            "user_bidding_signals": "[1, 2, 3]"
+          }
+        ]
+      }
+    }
+  }
+}

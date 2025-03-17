@@ -1,0 +1,16 @@
+cvm_config {
+  cvm_type: CVMTYPE_SEVSNP
+  runc_runtime_bundle: "/runc.tar"
+  hats_system_bundle: "/system_bundle.tar"
+  vmm_binary: "/usr/local/bin/qemu-system-x86_64"
+  num_cpus: 2
+  ramdrive_size_kb: 524288
+  ram_size_kb: 1048576
+  network_config {
+    virtual_bridge {
+      virtual_bridge_device: "ba-dev"
+      cvm_ip_addr: "192.168.84.204"
+      cvm_gateway_addr: "192.168.84.1"
+    }
+  }
+}
