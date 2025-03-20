@@ -15,6 +15,8 @@ interface named `ba-dev`.
 
 ## Build Source code
 
+WARN: We recommend more than 64 vCPU and 128 GiB to finish building within 2 hours.
+
 NOTE: Before open sourcing is done, the `Build machine` must be your `Cloudtop` with corp access!
 
 On the `Build machine`, run `./pull_code.sh` to pull the Hats / B&A / B&A local testing app source

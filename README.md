@@ -12,21 +12,19 @@ Our demo uses 3 "devices", but you can run the demo in a single device if satisf
 requirement.
 
 -   Terminal, such as your MacOS laptop.
-
     -   Access to both the Build machine and Test machine.
 
--   Build machine
-
+-   Recommended Build machine
+    -   CPU `>=64` vCPUs
     -   RAM `>=128GiB`
+    -   Empty Disk Space `>=128GiB`
     -   Internet connection
 
 -   Test machine
-
-    -   RAM `>=32GiB`
+    -   RAM `>=64GiB`
     -   AMD SEV-SNP enabled CPU `EPYC 7003` or newer
     -   Linux Kernel Version `6.11.0` or newer
     -   Internet connection
-    -   CentOS stream 10
 
 For reference, we built the demos on a gLinux rodete ( debian ) server with 128GiB RAM, and copied
 the `demo.tar` file to the test machine through
