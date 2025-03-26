@@ -9,6 +9,14 @@ On both your `Build machine` and `Test machine`, install
 -   `git` ( [Install guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) )
 -   `docker engine` ( [Public install guide](https://docs.docker.com/engine/install/),
     [Googler cloudtop install guide](go/installdocker) )
+    - Please use sudoless mode following [Postinstall instruction](https://docs.docker.com/engine/install/linux-postinstall/)
+    - You may need to logout of your shell or run `newgrp docker` to activate the new groups for change to apply.
+    - Check by running `docker ps`.
+-   `docker compose`
+    - [Public install guide](https://docs.docker.com/compose/install/)
+    - [Googler install guide](go/installdocker#docker-compose)
+    - Check by running `docker compose` or `docker-compose` depending on how it's installed.
+
 
 On your `Test machine`, ensure `192.168.84.0/24` IP range is free to use and there's no network
 interface named `ba-dev`.
@@ -87,7 +95,13 @@ In `run_dependencies` folder, run
 docker compose up
 ```
 
-This creates a "ba-dev" docker network bridge for all the traffic at `192.168.84.0/24`. Wait for a
+or, if you installed standalone docker compose:
+
+```
+docker-compose up
+```
+
+This creates a "ba-dev" docker network bridge for all the traffic at `192.168.84.0/24` and then the whole B&A stack onprem. Wait for a
 line looks like
 
 ```
