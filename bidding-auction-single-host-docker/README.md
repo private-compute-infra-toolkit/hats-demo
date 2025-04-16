@@ -21,6 +21,12 @@ On both your `Build machine` and `Test machine`, install
 On your `Test machine`, ensure `192.168.84.0/24` IP range is free to use and there's no network
 interface named `ba-dev`.
 
+You must set SELinux to permissive mode in order to run the CVMs. Run
+
+```
+sudo setenforce 0
+```
+
 ## Build Source code
 
 WARN: We recommend more than 64 vCPU and 128 GiB to finish building within 2 hours.
