@@ -2,10 +2,17 @@ bidding-auction-single-host/demo
 bidding-auction-single-host/demo.tar
 trusted-application-single-host/demo
 trusted-application-single-host/demo.tar
+build-ollama-gemma3-bundle/target
+bidding-auction-single-host-docker/build_dependencies/.hats-cache
 bidding-auction-single-host-docker/build_dependencies/bidding-auction-server
 bidding-auction-single-host-docker/build_dependencies/hats-docker/hats
 bidding-auction-single-host-docker/build_dependencies/output/
 bidding-auction-single-host-docker/run_dependencies/bidding-auction-local-testing-app/
 bidding-auction-single-host-docker/run_dependencies/output/
+on-prem-docker-demo/build_dependencies/.hats-cache
+on-prem-docker-demo/build_dependencies/hats-docker/hats
+on-prem-docker-demo/build_dependencies/output/
+on-prem-docker-demo/run_dependencies/output/
+trusted-application-single-host-docker/*
 dist/
 docker-buildx-presubmit-*.log
