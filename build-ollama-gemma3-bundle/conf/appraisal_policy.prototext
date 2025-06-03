@@ -1,0 +1,23 @@
+policies {
+  description: "QEMU CVM - GEMMA3:1B CORES: 2, RAM: 23068672 KB"
+  measurement {
+    stage0_measurement {
+            amd_sev {
+              sha384: "fe21dd7648c63f0529f05b375c2cd1d00c049cd3fbd752de9ea24f0701e56db7b8a062ebd41fa16a1385213c40af76f8"
+              min_tcb_version {
+                boot_loader: 4
+                snp: 22
+                microcode: 213
+              }
+            }
+    }
+    kernel_image_sha256: "eca5ef41f6dc7e930d8e9376e78d19802c49f5a24a14c0be18c8e0e3a8be3e84"
+    kernel_setup_data_sha256: "9745b0f42d03054bb49033b766177e571f51f511c1368611d2ee268a704c641b"
+    init_ram_fs_sha256: "7cd4896bdd958f67a6a85cc1cc780761ac9615bc25ae4436aad1d4e9d2332c1a"
+    memory_map_sha256: "08c8b6dc7ad4ba91610855f7d9b526f4f9d2b122218806fa41c589aefe50533a"
+    acpi_table_sha256: "c8219f6f270744355d2417c0a6603f984615eece733b3f419390033f464dce88"
+    kernel_cmd_line_regex: "^ console=ttyS0 panic=-1 brd.rd_nr=1 brd.rd_size=.* brd.max_part=1 ip=192.168.84.*::192.168.84.1:255.255.255.0::enp0s1:off quiet -- --launcher-addr=vsock://2:.*$"
+    system_image_sha256: "cd6c3daef170c7c5cef8c18bbc28b435aad9714157e9d879856e9e86b16e2507"
+    container_binary_sha256: "3b7db63b2d2709ac66e6501aaba6ca48ac17350c9c9daeec51f084d592a046ff" # ollama-gemma3-image.tar
+  }
+}
