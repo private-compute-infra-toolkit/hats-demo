@@ -1,3 +1,7 @@
+**/*.tar
+build/launcher/launcher_main 
+build/tvs/tvs-image.tar
+build/tvs/tvs-server_main
 bidding-auction-single-host/demo
 bidding-auction-single-host/demo.tar
 trusted-application-single-host/demo
@@ -16,3 +20,8 @@ on-prem-docker-demo/run_dependencies/output/
 trusted-application-single-host-docker/*
 dist/
 docker-buildx-presubmit-*.log
+.hats-cache/
+.hats-stack/
+*/bazel-*
+src/hats/
+run/

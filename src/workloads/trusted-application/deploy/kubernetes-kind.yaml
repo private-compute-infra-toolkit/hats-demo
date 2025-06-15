@@ -1,0 +1,19 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 30080 # This will be the NodePort for your service
+    hostPort: 8080
+    protocol: TCP
+  extraMounts:
+  - hostPath: . # IMPORTANT: Create this directory on your local machine
+    containerPath: /mnt/pv # This path inside the Kind node container
+    # Optional: if you want to propagate mounts from the host to the container (node)
+    # propagation: HostToContainer

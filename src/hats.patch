@@ -1,0 +1,38 @@
+diff --git a/client/system_image/BUILD b/client/system_image/BUILD
+index 2c6a3c9..aa66342 100644
+--- a/client/system_image/BUILD
++++ b/client/system_image/BUILD
+@@ -28,6 +28,14 @@ pkg_tar(
+     package_dir = "/etc/systemd/network/",
+ )
+ 
++# In the case we need kubernetes networking, we set the specific resolv.conf.
++# so that containers can do service discovery properly.
++pkg_tar(
++  name = "resolv_conf",
++  srcs = ["resolv.conf"],
++  package_dir = "/etc/",
++)
++
+ # Administrative binaries.
+ pkg_tar(
+     name = "admin_bin",
+@@ -59,6 +67,7 @@ pkg_tar(
+     # buildifier: leave-alone
+     deps = [
+         "@oak_containers_system_image_base//file:base-image.tar.xz",
++        ":resolv_conf",
+         ":admin_bin",
+         ":interface",
+         "//client/system_image/test_single:services",
+diff --git a/client/system_image/resolv.conf b/client/system_image/resolv.conf
+new file mode 100644
+index 0000000..6fcca3e
+--- /dev/null
++++ b/client/system_image/resolv.conf
+@@ -0,0 +1,5 @@
++# This resolv.conf is used purely for the purpose of Kubernetes based build.
++nameserver 10.3.3.1
++
++# We hard code the resolv.conf here for Kubernetes cluster. It might differ for different cluster setting.
++search default.svc.cluster.local svc.cluster.local cluster.local
