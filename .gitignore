@@ -1,12 +1,2 @@
-**/*.tar
-build/launcher/launcher_main 
-build/tvs/tvs-image.tar
-build/tvs/tvs-server_main
-build-ollama-gemma3-bundle/target
-dist/
-docker-buildx-presubmit-*.log
-.hats-cache/
-.hats-stack/
-*/bazel-*
-src/hats/
-run/
+.cache/
+build/output/

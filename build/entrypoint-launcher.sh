@@ -1,4 +1,17 @@
 #!/bin/bash
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 echoerr() { echo "$@" 1>&2; }
 
@@ -22,31 +35,19 @@ if [[ -z "${NO_SNP}" ]]; then
 fi
 
 setup_network() {
-  ip link
+  # This bridge will have an address of 10.3.3.1/24 with dnsmasq setup.
+  # The dnsmasq server forwards DNS queries to docker provided ones defined in
+  # resolv.conf.
+  # The CVM runs on 10.3.3.2 and effectively acts as the container itself
+  # through iptables DNAT / MASQUERADE rules.
   ip link add dev br0 type bridge
   ip addr add 10.3.3.1/24 dev br0
   ip link set dev br0 up
 
-  # IP networking doesn't account for vsock CID allocation.
-  # Expose 10.3.3.2 ( VM address ) through NAT.
-  # Run dnsmasq on 10.3.3.1.
-  # 2 available implementations and we choose dnsmasq by default.
-  # - dnsmasq: better compatibility, but worse reliability.
-  # - iptables: better reliability, but may conflict with existing iptables rules.
-  #
-  # ADDRESS=$(awk '$1=="nameserver"{print $2; exit}' /etc/resolv.conf)
-  # echo "nameserver used: $ADDRESS"
-  #iptables -t nat -I PREROUTING -d 10.3.3.1 -j DNAT --to-destination $ADDRESS
-  #iptables -t nat -A OUTPUT -d 10.3.3.1 -j DNAT --to-destination $ADDRESS
-  #iptables -t nat -A POSTROUTING -d $ADDRESS -j MASQUERADE
-  #iptables -t nat -A PREROUTING -i eth0 -j DNAT --to-destination 10.3.3.2
-  #iptables -t nat -A POSTROUTING -s 10.3.3.2 -o eth0 -j MASQUERADE
   iptables -t nat -A PREROUTING ! -i br0 -j DNAT --to-destination 10.3.3.2
   iptables -t nat -A POSTROUTING -s 10.3.3.2 -j MASQUERADE
 
-  # Prevent duplicates
   iptables-save | uniq | iptables-restore
-
   dnsmasq
 }
 
@@ -72,7 +73,6 @@ echo "cvm_config {
 generate_config
 setup_network
 
-cat /config.prototext > /pv/testout
 ./launcher_main \
   --tvs_addresses="${TVS_ADDRESSES}" \
   --use_tls=false \

@@ -8,39 +8,15 @@ This repository contains demos for running applications using the HATs stack.
 
 ### Hardware requirements
 
-Our demo uses 3 "devices", but you can run the demo in a single device if satisfies the following
-requirement.
-
--   Terminal, such as your MacOS laptop.
-    -   Access to both the Build machine and Test machine.
-
--   Recommended Build machine
-    -   CPU `>=64` vCPUs
-    -   RAM `>=128GiB`
-    -   Empty Disk Space `>=128GiB`
-    -   Internet connection
-
--   Test machine
-    -   RAM `>=64GiB`
-    -   AMD SEV-SNP enabled CPU `EPYC 7003` or newer
-    -   Linux Kernel Version `6.11.0` or newer
-    -   Internet connection
-
-For reference, we built the demos on a gLinux rodete ( debian ) server with 128GiB RAM, and copied
-the `demo.tar` file to the test machine through
-
-```
-scp <build machine address>:~/demo.tar \
-    <test machine address>:~/demo.tar
-```
-
-We tested the demo on two different test machines as following.
+-   RAM `>=64GiB`
+-   AMD SEV-SNP enabled CPU `EPYC 7003` or newer
+-   Linux Kernel Version `6.11.0` or newer
 
 ### Setup SEV-SNP feature on Test machine
 
 You need to turn on AMD SEV-SNP feature on the Test machine. You can refer to
 [Using SEV with AMD EPYC Processors](https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/tuning-guides/58207-using-sev-with-amd-epyc-processors.pdf)
-for instructions for your specific machine model. We have two reference test machines.
+for instructions for your specific machine model. We have two reference guides.
 
 #### AMD EPYC 7313P, Supermicro H12SSL-I motherboard
 
