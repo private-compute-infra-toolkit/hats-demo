@@ -1,0 +1,15 @@
+policies {
+  measurement {
+    stage0_measurement {
+      insecure {}
+    }
+    kernel_image_sha256: "f9d0584247b46cc234a862aa8cd08765b38405022253a78b9af189c4cedbe447"
+    kernel_setup_data_sha256: "5a5cd42b9471aadf96dc2d2407d9dcbb1165c28c7eea1a0b4e9c72cf0623bbba"
+    init_ram_fs_sha256: "b2b5eda097c2e15988fd3837145432e3792124dbe0586edd961efda497274391"
+    memory_map_sha256: "6a5ebffd3a3afcfc5da85f1b9b5b2cd099f1529463a3c74455a95097140aaa88"
+    acpi_table_sha256: "06b46c76fe392fb9ff624cf5f3d08d7d4a10f161b978c78f4d9e39f091f3008f"
+    kernel_cmd_line_regex: "^ console=ttyS0 panic=-1 brd.rd_nr=1 brd.rd_size=1048576 brd.max_part=1 ip=10.3.3.2::10.3.3.1:255.255.255.0::enp0s1:off quiet -- --launcher-addr=vsock://2:.*$"
+    system_image_sha256: "af99ae9fdee76f949a3cb08fd0302e47542c02690299a970f33a41abe8caea09"
+    container_binary_sha256: "b0803886a6e096bf1c9eacaa77dd1514134d2e88a7734af9ba2dbf650884f899"
+  }
+}

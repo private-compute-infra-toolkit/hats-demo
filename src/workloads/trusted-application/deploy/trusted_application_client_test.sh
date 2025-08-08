@@ -1,1 +1,0 @@
-./trusted_application_client_main --address=localhost:8080 --forwarding_address='dns:///server2:8080' --message='Hello!' --key_id=1 --app_key=7c4fc15e7e4ac2b0095afcd7f514d6e9b6177cbec22b87c886d9dc85fbaf5bb2

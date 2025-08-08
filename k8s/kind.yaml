@@ -10,10 +10,8 @@ nodes:
         node-labels: "ingress-ready=true"
   extraPortMappings:
   - containerPort: 30080 # This will be the NodePort for your service
-    hostPort: 8080
+    hostPort: 7572
     protocol: TCP
   extraMounts:
-  - hostPath: . # IMPORTANT: Create this directory on your local machine
+  - hostPath: ../
     containerPath: /mnt/pv # This path inside the Kind node container
-    # Optional: if you want to propagate mounts from the host to the container (node)
-    # propagation: HostToContainer

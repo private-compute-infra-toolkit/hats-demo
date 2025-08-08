@@ -35,7 +35,7 @@ RUN make install
 # note that dnsmasq is optional because we can tune the iptables rules but that
 # makes it more environment dependent.
 FROM debian:bookworm-slim@${image_digest}
-RUN apt update && apt install -y libglib2.0-0 iptables iproute2 dnsmasq
+RUN apt update && apt install -y libglib2.0-0 iptables iproute2 dnsmasq ca-certificates
 COPY --from=0 /usr/local/bin/qemu-system-x86_64 /usr/local/bin/qemu-system-x86_64
 
 WORKDIR /

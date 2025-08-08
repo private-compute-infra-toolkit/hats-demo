@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-client
+spec:
+  containers:
+  - name: client
+    image: hats-devtools:latest
+    imagePullPolicy: IfNotPresent
+    command:
+      - "/trusted_application_client_main"
+      - "--address"
+      - "server1-service:8080"
+      - "--app_key"
+      - "819f30baffd52bbbf14e7bfc1c8a6f578970a2beb6725af5392097db5bd99016"
+  restartPolicy: Never

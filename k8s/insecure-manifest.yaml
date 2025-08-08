@@ -28,68 +28,6 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: server2-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: server2
-  template:
-    metadata:
-      labels:
-        app: server2
-    spec:
-      containers:
-      - name: launcher-container2
-        image: launcher:latest # Make sure this image is available
-        imagePullPolicy: IfNotPresent # Or Always, depending on your needs
-        env:
-        - name: NO_SNP
-          value: "1"
-        - name: SYSTEM_BUNDLE
-          value: "/pv/system_bundle.tar"
-        - name: RUNC_RUNTIME_BUNDLE
-          value: "/pv/runtime_bundle.tar"
-        - name: TVS_ADDRESSES
-          value: "tvs:7774"
-        - name: TVS_AUTHENTICATION_KEY
-          value: "8f698f0b278cf57318a92faebb1dc49cda242973f2304e38660dc9bbc5cb18e5"
-        - name: NUM_CPUS
-          value: "1" 
-        - name: RAMDRIVE_SIZE_KB
-          value: "1048576" 
-        - name: RAM_SIZE_KB
-          value: "1048576"
-        securityContext:
-          # Another option is writing a daemon set for Device Plugin.
-          # The security posture is similar however because that plugin requires
-          # privileged access.
-          privileged: true
-        volumeMounts:
-        - name: workload-storage
-          mountPath: "/pv" # Mount path for the PV inside the container
-      volumes:
-      - name: workload-storage
-        persistentVolumeClaim:
-          claimName: pvc-workload
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: server2 # Changed to match your requested service name "server1"
-spec:
-  type: ClusterIP
-  selector:
-    app: server2 # Must match the labels of your Pods
-  ports:
-  - protocol: TCP
-    port: 8080       # Port the service is available on *inside* the cluster
-    targetPort: 8080 # Port your container is listening on (adjust if different)
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: server1-deployment
 spec:
   replicas: 1
@@ -107,19 +45,19 @@ spec:
         imagePullPolicy: IfNotPresent # Or Always, depending on your needs
         env:
         - name: NO_SNP
-          value: "1"
+          value: "true"
         - name: SYSTEM_BUNDLE
-          value: "/pv/system_bundle.tar"
+          value: "/pv/build/output/system_bundle_test_single.tar"
         - name: RUNC_RUNTIME_BUNDLE
-          value: "/pv/runtime_bundle.tar"
+          value: "/pv/build/output/runtime_bundle.tar"
         - name: TVS_ADDRESSES
           value: "tvs:7774"
         - name: TVS_AUTHENTICATION_KEY
           value: "8f698f0b278cf57318a92faebb1dc49cda242973f2304e38660dc9bbc5cb18e5"
         - name: NUM_CPUS
-          value: "1" 
+          value: "1"
         - name: RAMDRIVE_SIZE_KB
-          value: "1048576" 
+          value: "1048576"
         - name: RAM_SIZE_KB
           value: "1048576"
         securityContext:
@@ -177,13 +115,13 @@ spec:
         - name: USER_KEY_ID
           value: "1"
         - name: USER_PUBLIC_KEY
-          value: "none"
+          value: "819f30baffd52bbbf14e7bfc1c8a6f578970a2beb6725af5392097db5bd99016"
         - name: USER_SECRET
-          value: "7c4fc15e7e4ac2b0095afcd7f514d6e9b6177cbec22b87c886d9dc85fbaf5bb2"
+          value: "07d7276d0293d869f8130c0eeee3e9b6af165c59c949f04c387f81aa82326985"
         - name: USER_AUTHENTICATION_PUBLIC_KEY
           value: "043b5b650f59ec2905b1eed71eb48ffdc862acc1c0d3c6b5e46e8a0838060107e4e34cb2ace77a9f909d3a910430a61e2403e79492ea922ebe1162c0d86fb4afe0"
         - name: APPRAISAL_POLICY_FILE
-          value: "/pv/appraisal_policy.txtpb"
+          value: "/pv/k8s/insecure-appraisal-policy.prototext"
         volumeMounts:
         - name: workload-storage
           mountPath: "/pv" # Mount path for the PV inside the container

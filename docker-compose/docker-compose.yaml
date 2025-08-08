@@ -1,0 +1,45 @@
+services:
+  tvs:
+    image: tvs:latest
+    environment:
+      USER_KEY_ID: 1
+      USER_PUBLIC_KEY: 819f30baffd52bbbf14e7bfc1c8a6f578970a2beb6725af5392097db5bd99016
+      USER_SECRET: 07d7276d0293d869f8130c0eeee3e9b6af165c59c949f04c387f81aa82326985
+      USER_AUTHENTICATION_PUBLIC_KEY: 043b5b650f59ec2905b1eed71eb48ffdc862acc1c0d3c6b5e46e8a0838060107e4e34cb2ace77a9f909d3a910430a61e2403e79492ea922ebe1162c0d86fb4afe0
+      APPRAISAL_POLICY_FILE: /pv/appraisal-policy.prototext
+    networks:
+        - hats-compose
+    volumes:
+      - .:/pv
+  server1:
+    image: launcher:latest
+    cap_add:
+      - NET_ADMIN
+    environment:
+      SYSTEM_BUNDLE: /pv/build/output/system_bundle_test_single.tar
+      RUNC_RUNTIME_BUNDLE: /pv/build/output/runtime_bundle.tar
+      TVS_ADDRESSES: "tvs:7774"
+      TVS_AUTHENTICATION_KEY: 8f698f0b278cf57318a92faebb1dc49cda242973f2304e38660dc9bbc5cb18e5
+      NUM_CPUS: 1
+      RAMDRIVE_SIZE_KB: 1048576
+      RAM_SIZE_KB: 1048576
+    ports:
+      - "8080:8080"
+    security_opt:
+      - seccomp:unconfined
+    devices:
+      - /dev/sev
+      - /dev/kvm
+      - /dev/net/tun
+      - /dev/vhost-vsock
+    networks:
+      - hats-compose
+    volumes:
+      - ..:/pv
+networks:
+  hats-compose:
+      driver: bridge
+      ipam:
+        config:
+          - subnet: 11.1.2.0/24
+            gateway: 11.1.2.1

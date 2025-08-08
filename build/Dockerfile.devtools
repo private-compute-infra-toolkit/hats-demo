@@ -15,13 +15,17 @@
 ARG image_digest=sha256:f528891ab1aa484bf7233dbcc84f3c806c3e427571d75510a9d74bb5ec535b33
  FROM debian:bookworm-slim@${image_digest}
 
-RUN apt-get update && apt-get install -y curl python3 gcc libssl-dev pkg-config
-RUN curl -LO https://github.com/virtee/sev-snp-measure/archive/refs/tags/v0.0.11.tar.gz
-RUN tar -xf v0.0.11.tar.gz
-RUN ln -s /sev-snp-measure-0.0.11/sev-snp-measure.py /usr/local/bin/sev-snp-measure
-
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-RUN . "$HOME/.cargo/env" && cargo install --version 0.5.0 snphost
+# snphost is used for checking SNP machine availability and download vcek
+# certs.
+RUN apt-get update && apt-get install -y perl build-essential curl python3 python3-pip gcc libssl-dev pkg-config
+ENV PATH="/root/.cargo/bin:${PATH}"
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN cargo install --version 0.5.0 snphost
 RUN ln -s /root/.cargo/bin/snphost /usr/local/bin/snphost
 
-COPY . .
+RUN cargo install --version 0.6.2 sevctl
+RUN pip3 install --break-system-packages sev-snp-measure
+
+COPY ./generate_stage0_measurement.sh /generate_stage0_measurement.sh
+# trusted_application_client_main is used for testing.
+COPY ./output/trusted_application_client_main /trusted_application_client_main

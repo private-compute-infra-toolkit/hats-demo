@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-RET=0
-if ! snphost ok ; then
-  printf "\033[0;31m!!!!! This device doesn't support SEV-SNP required by the demo\033[0m\n"
-  RET=1
-fi
+docker run --network docker-compose_hats-compose \
+--entrypoint /trusted_application_client_main \
+hats-devtools:latest --address server1:8080 \
+--app_key 819f30baffd52bbbf14e7bfc1c8a6f578970a2beb6725af5392097db5bd99016
 
-exit $RET
+exit_code=$?
+if [ $exit_code -eq 0 ]; then
+  echo "Test passed."
+else
+  echo "Test failed."
+fi
+exit $exit_code

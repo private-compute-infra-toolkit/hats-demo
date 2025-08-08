@@ -21,6 +21,11 @@ mkdir -p ./build/output
 echo '>>>>>>> Pull Hats Repo'
 git submodule update --init --recursive
 
+echo '>>>>>>> Temporarily apply hats patch'
+pushd ./hats
+git apply ../src/hats.patch
+popd
+
 echo '>>>>>>> Build Hats Demo stack'
 # Setup the build environment...
 docker build -t pcit_hats_kokoro_builder:latest ./hats/google_internal/kokoro/
@@ -44,6 +49,8 @@ bazel build -c opt //client/launcher:launcher_main && \
 cp bazel-bin/client/launcher/launcher_main client/trusted_application/test_data/ && \
 bazel build -c opt //tvs/standalone_server:tvs-server_main && \
 cp bazel-bin/tvs/standalone_server/tvs-server_main client/trusted_application/test_data/ && \
+bazel build -c opt //client/trusted_application/client:trusted_application_client_main && \
+cp bazel-bin/client/trusted_application/client/trusted_application_client_main client/trusted_application/test_data/ && \
 chmod -R +rw /workspace/hats/client/trusted_application/test_data
 '
 # The docker run command will execute the build process with builder user and
@@ -63,3 +70,4 @@ docker run \
 
 docker build -t tvs:latest -f build/Dockerfile.tvs build
 docker build -t launcher:latest -f build/Dockerfile.launcher build
+docker build -t hats-devtools:latest -f build/Dockerfile.devtools build

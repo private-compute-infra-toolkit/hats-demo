@@ -1,0 +1,143 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-local
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 3Gi # Adjust as needed
+  accessModes:
+    - ReadOnlyMany
+  hostPath:
+    path: "/mnt/pv" # This path MUST match the containerPath in kind-config.yaml extraMounts
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-workload
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 3Gi # Must be less than or equal to PV capacity
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server1-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server1
+  template:
+    metadata:
+      labels:
+        app: server1
+    spec:
+      containers:
+      - name: launcher-container
+        image: launcher:latest # Make sure this image is available
+        imagePullPolicy: IfNotPresent # Or Always, depending on your needs
+        env:
+        - name: SYSTEM_BUNDLE
+          value: "/pv/build/output/system_bundle_test_single.tar"
+        - name: RUNC_RUNTIME_BUNDLE
+          value: "/pv/build/output/runtime_bundle.tar"
+        - name: TVS_ADDRESSES
+          value: "tvs:7774"
+        - name: TVS_AUTHENTICATION_KEY
+          value: "8f698f0b278cf57318a92faebb1dc49cda242973f2304e38660dc9bbc5cb18e5"
+        - name: NUM_CPUS
+          value: "1"
+        - name: RAMDRIVE_SIZE_KB
+          value: "1048576"
+        - name: RAM_SIZE_KB
+          value: "1048576"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: workload-storage
+          mountPath: "/pv"
+        - name: sev-device
+          mountPath: /dev/sev
+      volumes:
+      - name: workload-storage
+        persistentVolumeClaim:
+          claimName: pvc-workload
+      - name: sev-device
+        hostPath:
+          path: /dev/sev
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server1-service
+spec:
+  type: NodePort
+  selector:
+    app: server1 # Must match the labels of your Pods
+  ports:
+  - protocol: TCP
+    port: 8080       # Port the service is available on *inside* the cluster
+    targetPort: 8080 # Port your container is listening on (adjust if different)
+    nodePort: 30080 # This MUST match the containerPort in kind-config.yaml
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tvs-internal-deployment
+  labels:
+    app: tvs-internal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tvs-internal
+  template:
+    metadata:
+      labels:
+        app: tvs-internal
+    spec:
+      containers:
+      - name: tvs-container
+        image: tvs:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 7774
+        env:
+        - name: USER_KEY_ID
+          value: "1"
+        - name: USER_PUBLIC_KEY
+          value: "819f30baffd52bbbf14e7bfc1c8a6f578970a2beb6725af5392097db5bd99016"
+        - name: USER_SECRET
+          value: "07d7276d0293d869f8130c0eeee3e9b6af165c59c949f04c387f81aa82326985"
+        - name: USER_AUTHENTICATION_PUBLIC_KEY
+          value: "043b5b650f59ec2905b1eed71eb48ffdc862acc1c0d3c6b5e46e8a0838060107e4e34cb2ace77a9f909d3a910430a61e2403e79492ea922ebe1162c0d86fb4afe0"
+        - name: APPRAISAL_POLICY_FILE
+          value: "/pv/k8s/appraisal-policy.prototext"
+        volumeMounts:
+        - name: workload-storage
+          mountPath: "/pv"
+      volumes:
+      - name: workload-storage
+        persistentVolumeClaim:
+          claimName: pvc-workload
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tvs
+spec:
+  type: ClusterIP
+  selector:
+    app: tvs-internal
+  ports:
+  - protocol: TCP
+    port: 7774
+    targetPort: 7774
