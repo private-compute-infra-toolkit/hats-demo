@@ -7,7 +7,7 @@
 			"gid": 0
 		},
 		"args": [
-			"/usr/bin/start-gemma3.sh"
+			"/usr/bin/entrypoint-gemma3.sh"
 		],
 		"env": [
 			"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
@@ -124,7 +124,16 @@
 				"relatime",
 				"ro"
 			]
-		}
+		},
+    {
+      "destination": "/etc/resolv.conf",
+      "type": "bind",
+      "source": "/etc/resolv.conf",
+      "options": [
+        "rbind",
+        "ro"
+      ]
+    }
 	],
 	"linux": {
 		"uidMappings": [

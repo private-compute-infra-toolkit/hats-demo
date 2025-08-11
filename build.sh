@@ -23,8 +23,48 @@ git submodule update --init --recursive
 
 echo '>>>>>>> Temporarily apply hats patch'
 pushd ./hats
-git apply ../src/hats.patch
+git apply ../hats.patch
 popd
+
+function build_ollama_gemma_image {
+  echo '>>>>>>> Build Gemma3 demo'
+  local tag='hats-demo-gemma3:latest'
+  local tar_name='gemma3-image.tar'
+  pushd build
+  docker buildx build . \
+   --tag="$tag" \
+   --file "Dockerfile.gemma3"
+
+  # We need to actually create a container, otherwise we won't be able to use
+  # `docker export` that gives us a filesystem image.
+  # (`docker save` creates a tarball which has all the layers separate, which is
+  # _not_ what we want.)
+  local NEW_DOCKER_CONTAINER_ID="$(docker create "$tag")"
+
+  # We export a plain tarball.
+  # The oak_containers_sysimage_base oci_image rule will use this tarball to
+  # create an OCI image that it can then push to Google artifact registry.
+  # There *might* be a better approach here, but this is working for now.
+  docker export "$NEW_DOCKER_CONTAINER_ID" > output/"$tar_name"
+  docker rm "$NEW_DOCKER_CONTAINER_ID"
+
+  # Repackage the base image tar so that entries are in a consistent order and have a
+  # consistent mtime. fakeroot ensures that file permissions are maintained, even
+  # when not building as root.
+  #
+  sandbox="$(mktemp -d)"
+  fakeroot -- sh -c "\
+    mkdir \"${sandbox}\"/rootfs \
+    && tar --extract --file output/$tar_name --directory \"${sandbox}\"/rootfs \
+    && cp config-gemma3.json \"${sandbox}\"/config.json \
+    && touch \"${sandbox}\"/rootfs/root/.ollama/history \
+    && tar --create --sort=name --file output/$tar_name --mtime='2000-01-01Z' \
+      --numeric-owner --directory \"${sandbox}\" ."
+  rm -rf -- "$sandbox"
+  popd
+}
+
+build_ollama_gemma_image
 
 echo '>>>>>>> Build Hats Demo stack'
 # Setup the build environment...
@@ -71,3 +111,4 @@ docker run \
 docker build -t tvs:latest -f build/Dockerfile.tvs build
 docker build -t launcher:latest -f build/Dockerfile.launcher build
 docker build -t hats-devtools:latest -f build/Dockerfile.devtools build
+

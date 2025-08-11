@@ -1,6 +1,6 @@
-# Docker Compose Demo with Trusted Application
+# Gemma3 Demo with Trusted Application
 
-This demo showcases how to run a trusted application using docker compose.
+This demo showcases how to run a trusted application using docker compose. The trusted application in this demo is an Ollama server running the Gemma3 language model.
 
 ## Prerequisites
 
@@ -23,11 +23,11 @@ sudo setenforce 0
 
 ## Build demo artifacts
 
-From git repo root, run ./build.sh.
+From the git repo root, run `./build.sh`.
 
 ## Update Stage0 Measurement for SNP machine only
 
-In appraisal_policy.textproto for secure mode, the stage0 measurement varies for
+In `appraisal-policy.prototext` for secure mode, the stage0 measurement varies for
 different CPU types. To compute the stage0 measurement, please first run:
 
 From git repo root:
@@ -57,11 +57,7 @@ After the application is running, you can test it by running the `test.sh` scrip
 ./test.sh
 ```
 
-If the application is running correctly, you should see the following output:
-
-```
-Hello from inside the trusted application!
-```
+This script sends a request to the Ollama server asking for its name. If the application is running correctly, you should see a response from the Gemma3 model.
 
 ## Files
 
@@ -75,18 +71,19 @@ Hello from inside the trusted application!
 ## Troubleshooting
 
 If you see an error that looks like:
+
 ```
 tvs-1      | W0811 19:27:24.314754      26 tvs-service.cc:92] Invalid or malformed command. UNKNOWN: Failed to verify report. No matching appraisal policy found
 server1-1  | I0811 19:27:25.744291      50 logs-service.cc:55] oak-orchestrator.service: Error: couldn't fetch single tvs client: "error from tvs server: Error status: Unknown, message: \"Failed to read from stream. Invalid or malformed command. UNKNOWN: Failed to verify report. No matching appraisal policy found\", details: [], metadata: MetadataMap { headers: {} }"
 ```
 This means that the hardware attestation couldn't be verified by the attestation verification service. Please copy the policies produced by TVS (after the line `Maybe try the following appraisal policy:`) and paste it into `appraisal-policy.prototext` if you are on a SNP-enabled machine, or `insecure-appraisal-policy.prototext` otherwise. An example of the policy looks like:
+
 ```
 tvs-1      | [2025-08-11T19:27:24Z DEBUG policy_manager::debug] Maybe try the following appraisal policy:
                     policies {
                       measurement {
                         stage0_measurement {
-                      
-amd_sev {
+                          amd_sev {
                         sha384: "2ca92db10d674548cca183c1ef896ce240f786e17903f2fb2eb6e63d1d130ed440dbd31b2254d93572033614e673639e"
                         min_tcb_version {
                           boot_loader: 4
@@ -105,6 +102,4 @@ amd_sev {
                         container_binary_sha256: "bfb9719fd8ebdc529c8a013f9e697fd11aeb0acc53633bf83353a3f4a04c44b6"
                       }
                     }
-```
-
 ```

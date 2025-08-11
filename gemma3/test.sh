@@ -13,6 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-OUTPUT="$(readlink -f $(dirname $0)/../output/)"
-CONF="$(readlink -f $(dirname $0)/../conf/)"
-docker run --privileged -v $OUTPUT:/output -v $CONF:/conf --rm $(docker build -q .)
+docker run --network gemma3_hats-compose \
+hats-devtools:latest \
+curl http://server1:11434/api/chat -d '{
+  "model": "gemma3:1b",
+  "messages": [
+    { "role": "user", "content": "Reply only your name in the response." }
+  ]
+}'
+
+exit_code=$?
+if [ $exit_code -eq 0 ]; then
+  echo "Test passed."
+else
+  echo "Test failed."
+fi
+exit $exit_code

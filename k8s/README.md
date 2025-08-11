@@ -14,6 +14,19 @@ Please follow the official documentation to install the tools:
 
 This demo only supports Linux.
 
+**Note:** To run this demo, you may need to temporarily disable SELinux.
+
+To check the status of SELinux, run:
+```bash
+getenforce
+```
+
+If it is `Enforcing`, you can temporarily disable it with:
+```bash
+sudo setenforce 0
+```
+
+
 ## Build demo artifacts
 
 From the git repo root, run `./build.sh`. This will build the necessary Docker images.
@@ -87,3 +100,53 @@ kind delete cluster --name hats-demo-cluster
 - `insecure-appraisal-policy.prototext`: Security policy for the trusted application in insecure mode.
 - `kind.yaml`: Kind cluster configuration file.
 - `README.md`: This file.
+
+## Troubleshooting
+
+If you see an error in the `kubectl logs` output that looks like:
+```
+tvs-1      | W0811 19:27:24.314754      26 tvs-service.cc:92] Invalid or malformed command. UNKNOWN: Failed to verify report. No matching appraisal policy found
+server1-1  | I0811 19:27:25.744291      50 logs-service.cc:55] oak-orchestrator.service: Error: couldn't fetch single tvs client: "error from tvs server: Error status: Unknown, message: \"Failed to read from stream. Invalid or malformed command. UNKNOWN: Failed to verify report. No matching appraisal policy found\", details: [], metadata: MetadataMap { headers: {} }"
+```
+This means that the hardware attestation couldn't be verified by the attestation verification service. Please copy the policies produced by TVS (after the line `Maybe try the following appraisal policy:`) and paste it into `appraisal-policy.prototext` if you are on a SNP-enabled machine, or `insecure-appraisal-policy.prototext` otherwise. An example of the policy looks like:
+```
+tvs-1      | [2025-08-11T19:27:24Z DEBUG policy_manager::debug] Maybe try the following appraisal policy:
+                    policies {
+                      measurement {
+                        stage0_measurement {
+
+                      amd_sev {
+                        sha384: "2ca92db10d674548cca183c1ef896ce240f786e17903f2fb2eb6e63d1d130ed440dbd31b2254d93572033614e673639e"
+                        min_tcb_version {
+                          boot_loader: 4
+                          snp: 23
+                          microcode: 213
+                        }
+                      }
+                        kernel_image_sha256: "f9d0584247b46cc234a862aa8cd08765b38405022253a78b9af189c4cedbe447"
+                        kernel_setup_data_sha256: "75f091da89ce81e9decb378c3b72a948aed5892612256b3a6e8305ed034ec39a"
+                        init_ram_fs_sha256: "b2b5eda097c2e15988fd3837145432e3792124dbe0586edd961efda497274391"
+                        memory_map_sha256: "ee25374b63f420432cf01ef0220df36d37a2288c52f4683c0fe5eaf6dd6dcc29"
+                        acpi_table_sha256: "cc6218b513944e1973e113f2be6a74fd21b5272a323cf7c693e06d18e9a677a5"
+                        kernel_cmd_line_regex: "^ console=ttyS0 panic=-1 brd.rd_nr=1 brd.rd_size=25165824 brd.max_part=1 ip=10.3.3.2::10.3.3.1:255.255.255.0::enp0s1:off quiet -- --launcher-addr=vsock://2:.*$"
+                        system_image_sha256: "af99ae9fdee76f949a3cb08fd0302e47542c02690299a970f33a41abe8caea09"
+                        container_binary_sha256: "bfb9719fd8ebdc529c8a013f9e697fd11aeb0acc53633bf83353a3f4a04c44b6"
+                      }
+                    }
+```
+If you encounter issues, check the logs of the pods in the `hats-demo-cluster` for more information.
+
+```bash
+kubectl --context kind-hats-demo-cluster logs -f <pod-name>
+```
+You can also check the Kind cluster logs for any issues related to the cluster setup.
+
+```bash
+kind get logs --name hats-demo-cluster
+```
+If you need to start over, you can delete the cluster and recreate it.
+
+```bash
+kind delete cluster --name hats-demo-cluster
+./run.sh
+```
