@@ -20,9 +20,9 @@ services:
       RUNC_RUNTIME_BUNDLE: /pv/build/output/gemma3-image.tar
       TVS_ADDRESSES: "tvs:7774"
       TVS_AUTHENTICATION_KEY: 8f698f0b278cf57318a92faebb1dc49cda242973f2304e38660dc9bbc5cb18e5
-      NUM_CPUS: 2
-      RAMDRIVE_SIZE_KB: 25165824 # 20 GiB
-      RAM_SIZE_KB: 33554432 # 32 GiB
+      NUM_CPUS: 1
+      RAMDRIVE_SIZE_KB: 5242880
+      RAM_SIZE_KB: 23068672
     ports:
       - "8080:8080"
     security_opt:

@@ -5,7 +5,7 @@ policies {
         sha384: "a55bf4832a971635f21f96ea5aa7fa1175b0c21656a684c5cb7c04b57b3526c23bcae6bd060b9d4da076e30ebdadcb3d"
         min_tcb_version {
           boot_loader: 4
-          snp: 23
+          snp: 22
           microcode: 213
         }
       }

@@ -23,10 +23,21 @@ git submodule update --init --recursive
 
 echo '>>>>>>> Temporarily apply hats patch'
 pushd ./hats
-git apply ../hats.patch
+PATCH_FILE=../hats.patch
+# Check if the patch can be cleanly reversed (meaning it's already applied)
+if git apply --reverse --check "$PATCH_FILE" &>/dev/null; then
+  echo "Patch '$PATCH_FILE' is already applied. Skipping."
+else
+  # If it can't be reversed, it needs to be applied
+  echo "Applying patch '$PATCH_FILE'."
+  git apply "$PATCH_FILE"
+fi
 popd
 
+# the previous steps can fail but not the following.
+set -e
 function build_ollama_gemma_image {
+  set -e
   echo '>>>>>>> Build Gemma3 demo'
   local tag='hats-demo-gemma3:latest'
   local tar_name='gemma3-image.tar'
@@ -52,6 +63,16 @@ function build_ollama_gemma_image {
   # consistent mtime. fakeroot ensures that file permissions are maintained, even
   # when not building as root.
   #
+  # Check if the fakeroot command is available
+  if ! command -v fakeroot &> /dev/null; then
+    # If not found, print an error message to standard error and exit
+    echo "Error: 'fakeroot' is not installed or not in your PATH." >&2
+    echo "Please install it to continue (e.g., 'sudo apt-get install fakeroot' on Debian/Ubuntu)." >&2
+    exit 1
+  fi
+  # The rest of your script continues here
+  echo "fakeroot is installed. Proceeding..."
+
   sandbox="$(mktemp -d)"
   fakeroot -- sh -c "\
     mkdir \"${sandbox}\"/rootfs \
@@ -77,9 +98,10 @@ group_id=$(id -g)
 docker build -t pcit_hats_kokoro_builder_demo:latest - <<EOF
 FROM pcit_hats_kokoro_builder:latest
 RUN git config --global --add safe.directory '*'
-RUN groupadd builder -g ${group_id}
-RUN useradd -m builder -u ${user_id} -g ${group_id}
-RUN chown -R builder:builder /nix/
+# allow group/user creation failure in case that they already exist.
+RUN groupadd builder -g ${group_id} || true
+RUN useradd -m builder -u ${user_id} -g ${group_id} || true
+RUN chown -R ${user_id}:${group_id} /nix/
 USER builder
 EOF
 
