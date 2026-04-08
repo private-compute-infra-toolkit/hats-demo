@@ -1,3 +1,5 @@
+This repository has been archived. See this [blog post](https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies) for more information.
+
 # HATs Demo
 
 This repository contains demos for running applications using the HATs stack.
